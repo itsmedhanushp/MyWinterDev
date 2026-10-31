@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Winter Arc 2026</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d2e;--panel2:#19263a;--text:#f4f7fb;--muted:#9baac0;--green:#9be15d;--line:#2b3b52;--orange:#ffbd69}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101d2e,#080d16 70%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:760px;margin:auto;padding:18px 15px 40px}
+header{padding:22px 18px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(135deg,#1d3045,#111a29);margin-bottom:15px}
+.kicker{color:var(--green);font-size:12px;font-weight:800;letter-spacing:2px}
+h1{font-size:32px;line-height:1.05;margin:8px 0}h2{font-size:18px;margin:0 0 12px}
+.sub{color:var(--muted);margin:5px 0 0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}
+.stat b{display:block;font-size:25px;margin-top:4px}.stat span,.muted{color:var(--muted);font-size:12px}
+.progress{height:9px;background:#27354a;border-radius:20px;overflow:hidden;margin:10px 0}.progress div{height:100%;background:var(--green);width:0%;transition:width .2s}
+.card{margin:13px 0}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+select,input,button{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px}
+select{max-width:100%}button{cursor:pointer;font-weight:700}.primary{background:var(--green);color:#15200d;border:0}
+.habit{display:flex;gap:11px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}.habit:last-child{border:0}
+input[type=checkbox]{width:21px;height:21px;accent-color:#9be15d;flex:0 0 auto;margin:1px 0}
+.habit strong{display:block}.habit small{color:var(--muted)}
+.tag{font-size:11px;color:var(--orange);border:1px solid #76552e;border-radius:20px;padding:4px 8px;white-space:nowrap}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day{padding:8px 2px;text-align:center;border-radius:9px;background:var(--panel2);border:1px solid var(--line);font-size:11px;color:var(--muted)}
+.day.done{background:#27452b;color:#d7ffb8;border-color:#47783f}.day.special{border-color:#a8753b;color:#ffd59c}
+.day.today{outline:2px solid var(--green)}
+label.field{display:block;color:var(--muted);font-size:12px;margin:8px 0 4px}
+input[type=number],input[type=text]{width:100%}
+.actions{display:flex;flex-wrap:wrap;gap:8px}.actions button{flex:1}
+.note{background:#1c2b3e;border-left:3px solid var(--orange);padding:11px;border-radius:8px;color:#dbe5f2;font-size:13px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:15px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<main>
+<header>
+ <div class="kicker">61 DAYS · DISCIPLINE OVER PERFECTION</div>
+ <h1>WINTER ARC<br>2026 ❄️</h1>
+ <p class="sub">November 1 – December 31, 2026</p>
+ <div class="progress"><div id="overallBar"></div></div>
+ <div class="row"><span class="muted" id="overallText">0 of 61 days completed</span><strong id="overallPct">0%</strong></div>
+</header>
+
+<div class="grid">
+ <div class="stat"><span>Days completed</span><b id="completed">0 / 61</b></div>
+ <div class="stat"><span>Days remaining</span><b id="remaining">61</b></div>
+ <div class="stat"><span>Current streak</span><b id="streak">0 🔥</b></div>
+ <div class="stat"><span>Best day score</span><b id="best">0%</b></div>
+</div>
+
+<section class="card">
+ <div class="row"><h2>Daily check-in</h2><span class="tag" id="dayTag">DAY 1</span></div>
+ <label class="field" for="dateSelect">Choose a challenge date</label>
+ <select id="dateSelect" style="width:100%"></select>
+ <p class="muted" id="dateNote"></p>
+ <div id="habits"></div>
+ <div class="progress"><div id="dayBar"></div></div>
+ <div class="row"><span class="muted">Today's habits completed</span><strong id="dayPct">0%</strong></div>
+</section>
+
+<section class="card">
+ <h2>Planned celebrations 🎉</h2>
+ <p><strong>November 7:</strong> Farmhouse outing</p>
+ <p><strong>November 15:</strong> Senior's birthday treat</p>
+ <p class="muted">Enjoy your plans without guilt. These are planned social meals, not failures. Return to your usual routine at the next meal.</p>
+</section>
+
+<section class="card">
+ <h2>Body progress log</h2>
+ <p class="muted">Optional check-in. Use the same conditions each time; daily weight changes are mostly noise.</p>
+ <label class="field" for="weight">Weight (kg)</label><input id="weight" type="number" step="0.1" placeholder="e.g. 65">
+ <label class="field" for="waist">Waist (cm)</label><input id="waist" type="number" step="0.1" placeholder="Optional">
+ <label class="field" for="logDate">Log date</label><input id="logDate" type="date">
+ <div class="actions" style="margin-top:10px"><button class="primary" id="saveMeasure">Save measurement</button></div>
+ <div id="measurements" class="muted" style="margin-top:12px">No measurements saved yet.</div>
+</section>
+
+<section class="card">
+ <h2>61-day calendar</h2>
+ <div class="days" id="calendar"></div>
+ <p class="muted">A day turns green when all daily habits are checked.</p>
+</section>
+
+<section class="card">
+ <h2>Your Winter Arc rules</h2>
+ <ul>
+  <li>Choose no added sugar as your everyday target; whole fruit is fine.</li>
+  <li>Avoid unnecessary outside-food spending; enjoy the two planned events.</li>
+  <li>Eat regular, balanced meals with protein sources.</li>
+  <li>Follow your planned workout or take a recovery day when needed.</li>
+  <li>Hydrate and get enough sleep.</li>
+ </ul>
+ <div class="note">Creatine is optional, not a requirement for progress. If you are under 18, discuss supplements with a qualified healthcare professional and a parent/guardian before using them.</div>
+</section>
+
+<section class="card">
+ <h2>Backup & reset</h2>
+ <p class="muted">Your entries are saved in this browser on this device. Export a backup occasionally.</p>
+ <div class="actions">
+  <button id="exportBtn">Export backup</button>
+  <button id="importBtn">Import backup</button>
+  <button id="resetBtn">Reset all data</button>
+ </div>
+ <input id="importFile" type="file" accept="application/json" hidden>
+</section>
+
+<section class="card" id="driveSyncCard">
+ <h2>Google Drive cloud sync ☁️</h2>
+ <p class="muted">Connect the same Google account on each device. This app keeps a separate private JSON backup in your Drive.</p>
+ <label class="field" for="googleClientId">Google OAuth Client ID</label>
+ <input id="googleClientId" type="text" placeholder="Paste your Google Web client ID" autocomplete="off" style="width:100%;text-align:left">
+ <div class="actions" style="margin-top:9px"><button class="primary" id="driveConnect">Connect Google Drive</button><button id="driveSync">Sync now</button><button id="driveRestore">Restore from Drive</button></div>
+ <p class="muted" id="driveStatus" aria-live="polite">Not connected. Local browser data is still saved.</p>
+ <p class="muted">Drive access is limited to files this app creates or opens. Reconnect after opening the app on a new browser session; Google access tokens are not stored in the page.</p>
+</section>
+
+<footer>Built for your Winter Arc · Progress, not punishment.</footer>
+</main>
+<script>
+const start = new Date(2026,10,1), total=61;
+const habitDefs=[
+ ["No added sugar","Skip sugary drinks and added-sugar treats; whole fruit is okay."],
+ ["No unnecessary outside food","Stick to your plan except your two planned celebrations."],
+ ["Protein with meals","Include a protein source in your regular meals; no need to skip meals."],
+ ["Workout or recovery","Complete today's planned session, or take a proper recovery day."],
+ ["Hydration","Drink water regularly through the day."],
+ ["Sleep & recovery","Aim for a consistent, sufficient sleep routine."]
+];
+const key="winterArc2026_v1";
+let data=JSON.parse(localStorage.getItem(key)||'{"days":{},"measurements":[]}');
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(key,JSON.stringify(data));render()}
+function dayDate(i){return new Date(2026,10,1+i)}
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function idxFor(s){let d=new Date(s+"T12:00:00");return Math.round((d-start)/86400000)}
+function valid(i){return i>=0&&i<total}
+function special(i){return i===6||i===14}
+function setup(){
+ for(let i=0;i<total;i++){let d=dayDate(i),o=document.createElement("option");o.value=iso(d);o.textContent=`Day ${i+1} · ${d.toLocaleDateString("en-IN",{day:"numeric",month:"long"})}`+(special(i)?(i===6?" · Farmhouse":" · Birthday"):"");$("dateSelect").append(o)}
+ let now=new Date(),n=idxFor(iso(now));$("dateSelect").value=iso(dayDate(valid(n)?n:0));
+ $("dateSelect").addEventListener("change",renderDay);
+ $("saveMeasure").onclick=saveMeasure;$("exportBtn").onclick=exportData;$("importBtn").onclick=()=>$("importFile").click();$("importFile").onchange=importData;
+ $("resetBtn").onclick=()=>{if(confirm("Delete all Winter Arc check-ins and measurements from this browser?")){data={days:{},measurements:[]};save()}};
+ $("logDate").value=iso(new Date());render();
+}
+function renderDay(){
+ let i=idxFor($("dateSelect").value),d=dayDate(i),entry=data.days[i]||[];
+ $("dayTag").textContent=`DAY ${i+1} / 61`;
+ $("dateNote").textContent=special(i)?(i===6?"Planned farmhouse outing 🌿":"Planned birthday treat 🎂"):"";
+ $("habits").innerHTML="";
+ habitDefs.forEach((h,j)=>{
+  let div=document.createElement("label");div.className="habit";
+  let cb=document.createElement("input");cb.type="checkbox";cb.checked=!!entry[j];
+  cb.onchange=()=>{let a=[...(data.days[i]||Array(6).fill(false))];a[j]=cb.checked;data.days[i]=a;save()};
+  let txt=document.createElement("span");txt.innerHTML=`<strong>${h[0]}</strong><small>${h[1]}</small>`;
+  div.append(cb,txt);$("habits").append(div);
+ });
+ let count=entry.filter(Boolean).length,p=Math.round(count/6*100);
+ $("dayBar").style.width=p+"%";$("dayPct").textContent=p+"%";
+}
+function render(){
+ let complete=0,best=0,streak=0,run=0;
+ for(let i=0;i<total;i++){let a=data.days[i]||[],n=a.filter(Boolean).length;if(n===6)complete++;best=Math.max(best,Math.round(n/6*100))}
+ let today=idxFor(iso(new Date()));let upto=Math.min(total-1,Math.max(-1,today));
+ for(let i=0;i<=upto;i++){if((data.days[i]||[]).filter(Boolean).length===6)run++;else run=0}
+ streak=run;
+ $("completed").textContent=complete+" / 61";$("remaining").textContent=Math.max(0,total-Math.max(0,upto+1));
+ $("streak").textContent=streak+" 🔥";$("best").textContent=best+"%";
+ $("overallBar").style.width=Math.round(complete/total*100)+"%";$("overallPct").textContent=Math.round(complete/total*100)+"%";$("overallText").textContent=complete+" of 61 days fully completed";
+ $("calendar").innerHTML="";
+ for(let i=0;i<total;i++){let d=dayDate(i),a=data.days[i]||[],el=document.createElement("button");el.className="day"+(a.filter(Boolean).length===6?" done":"")+(special(i)?" special":"")+(iso(d)===$("dateSelect").value?" today":"");el.innerHTML=`${d.getDate()}<br>${["N","D"][0]}`;el.title=`Day ${i+1} · ${d.toDateString()} · ${a.filter(Boolean).length}/6 habits`;el.onclick=()=>{$("dateSelect").value=iso(d);renderDay();renderCalendarSelection()};$("calendar").append(el)}
+ renderDay();renderMeasurements();
+}
+function renderCalendarSelection(){[...$("calendar").children].forEach((el,i)=>el.classList.toggle("today",iso(dayDate(i))===$("dateSelect").value))}
+function saveMeasure(){
+ let w=$("weight").value,wa=$("waist").value,dt=$("logDate").value;if(!dt||(!w&&!wa)){alert("Enter a date and at least one measurement.");return}
+ data.measurements.push({date:dt,weight:w?Number(w):null,waist:wa?Number(wa):null});data.measurements.sort((a,b)=>a.date.localeCompare(b.date));$("weight").value="";$("waist").value="";save()
+}
+function renderMeasurements(){
+ let m=data.measurements||[];$("measurements").innerHTML=m.length?m.slice().reverse().map(x=>`${x.date}: ${x.weight??"—"} kg · waist ${x.waist??"—"} cm`).join("<br>"):"No measurements saved yet."
+}
+function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="winter-arc-2026-backup.json";a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let v=JSON.parse(r.result);if(!v.days||!Array.isArray(v.measurements))throw Error();data=v;save();alert("Backup imported.")}catch{alert("That backup file is not valid.")}};r.readAsText(f)}
+setup();
+</script>
+
+<script>
+(()=> {
+ const APP_ID='workout', STORAGE_KEY='winterArc2026_v1', FILE_NAME='WinterArc_Workout_Backup.json';
+ const META_KEY='winterArcDriveMeta_'+APP_ID, CLIENT_KEY='winterArcDriveClientId';
+ const $=id=>document.getElementById(id); let token='', syncing=false, suppress=false, debounce=null;
+ const status=s=>{const el=$('driveStatus');if(el)el.textContent=s};
+ const readLocal=()=>{try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')}catch{return null}};
+ const getMeta=()=>{try{return JSON.parse(localStorage.getItem(META_KEY)||'{"updatedAt":0}')}catch{return {updatedAt:0}}};
+ const setMeta=t=>localStorage.setItem(META_KEY,JSON.stringify({updatedAt:t}));
+ function loadGIS(){return new Promise((resolve,reject)=>{if(window.google?.accounts?.oauth2)return resolve();let s=document.querySelector('script[data-google-gis]');if(s){s.addEventListener('load',resolve,{once:true});s.addEventListener('error',reject,{once:true});return} s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.defer=true;s.dataset.googleGis='1';s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
+ async function api(url,opts={}){let r=await fetch(url,{...opts,headers:{Authorization:'Bearer '+token,...(opts.headers||{})}});if(!r.ok){let t=await r.text();if(r.status===401){token='';status('Google session expired. Tap Connect Google Drive again.')}throw new Error('Google Drive error '+r.status+': '+t.slice(0,220))}return r}
+ async function findFile(){let q=encodeURIComponent("name='"+FILE_NAME+"' and trashed=false");let r=await api('https://www.googleapis.com/drive/v3/files?q='+q+'&spaces=drive&fields=files(id,name,modifiedTime)&pageSize=10');let j=await r.json();return j.files?.[0]||null}
+ async function readRemote(f){let r=await api('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(f.id)+'?alt=media');return r.json()}
+ async function writeRemote(payload,f){let body=JSON.stringify(payload);if(f){await api('https://www.googleapis.com/upload/drive/v3/files/'+encodeURIComponent(f.id)+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body});return f.id}
+  const boundary='winterarc_'+Math.random().toString(36).slice(2),metadata={name:FILE_NAME,mimeType:'application/json'};
+  const multipart='--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(metadata)+'\r\n--'+boundary+'\r\nContent-Type: application/json\r\n\r\n'+body+'\r\n--'+boundary+'--';
+  let r=await api('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+boundary},body:multipart});return (await r.json()).id;
+ }
+ async function sync(forceRestore=false){if(!token){status('Connect Google Drive first.');return}if(syncing)return;syncing=true;try{
+  status('Checking Google Drive…');let f=await findFile(),local=readLocal(),lm=getMeta();
+  if(forceRestore){if(!f){status('No cloud backup found yet.');return}let remote=await readRemote(f);if(remote.appId!==APP_ID||!remote.data)throw Error('The Drive backup does not match this app.');suppress=true;localStorage.setItem(STORAGE_KEY,JSON.stringify(remote.data));setMeta(remote.updatedAt||Date.now());suppress=false;location.reload();return}
+  if(!f){if(!local){status('No local or cloud data found yet.');return}let stamp=lm.updatedAt||Date.now();setMeta(stamp);await writeRemote({appId:APP_ID,schemaVersion:1,updatedAt:stamp,data:local},null);status('First backup uploaded to Google Drive.');return}
+  let remote=await readRemote(f);if(remote.appId!==APP_ID||!remote.data)throw Error('The Drive backup does not match this app.');
+  let rt=Number(remote.updatedAt)||0,lt=Number(lm.updatedAt)||0;
+  if(!local||rt>lt){suppress=true;localStorage.setItem(STORAGE_KEY,JSON.stringify(remote.data));setMeta(rt||Date.now());suppress=false;location.reload();return}
+  if(lt>rt){await writeRemote({appId:APP_ID,schemaVersion:1,updatedAt:lt,data:local},f);status('Newer local progress uploaded to Drive.');return}
+  status('Already in sync.');
+ }catch(e){suppress=false;status(e.message||'Sync failed. Local data is safe.')}finally{syncing=false}}
+ function connect(){let clientId=$('googleClientId').value.trim();if(!clientId){status('Paste your Google Web OAuth Client ID first.');return}localStorage.setItem(CLIENT_KEY,clientId);loadGIS().then(()=>{let tc=google.accounts.oauth2.initTokenClient({client_id:clientId,scope:'https://www.googleapis.com/auth/drive.file',callback:async resp=>{if(resp.error){status('Google authorization failed: '+resp.error);return}token=resp.access_token;status('Google connected. Syncing…');await sync(false)}});tc.requestAccessToken({prompt:'consent'})}).catch(()=>status('Could not load Google sign-in. Check your internet connection.'))}
+ function schedule(){if(suppress||!token)return;clearTimeout(debounce);debounce=setTimeout(async()=>{try{let local=readLocal();if(!local)return;let stamp=Date.now();setMeta(stamp);let f=await findFile();await writeRemote({appId:APP_ID,schemaVersion:1,updatedAt:stamp,data:local},f);status('Auto-backup saved to Google Drive at '+new Date(stamp).toLocaleTimeString())}catch(e){status('Local save is safe. Cloud backup paused: '+e.message)}},1800)}
+ const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){original.call(this,k,v);if(k===STORAGE_KEY)schedule()};
+ $('googleClientId').value=localStorage.getItem(CLIENT_KEY)||'';
+ $('driveConnect').addEventListener('click',connect);$('driveSync').addEventListener('click',()=>sync(false));$('driveRestore').addEventListener('click',()=>{if(confirm('Replace this device’s workout progress with the Google Drive backup?'))sync(true)});
+})();
+</script>
+
+</body></html>

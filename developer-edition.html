@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827"><title>Winter Arc · Developer Edition</title>
+<style>
+:root{--bg:#09111d;--panel:#121e2e;--panel2:#1a2a40;--text:#f2f6fc;--muted:#9eacc0;--line:#2b3d54;--green:#a6e477;--blue:#83c5ff;--gold:#ffd18a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(155deg,#14243a,#080d15 72%);color:var(--text);font:15px/1.48 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:980px;margin:auto;padding:15px 13px 42px}header{padding:22px 18px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(135deg,#263e58,#111b2b);margin-bottom:14px}
+.kicker{color:var(--green);font-weight:800;font-size:11px;letter-spacing:2px}h1{font-size:30px;line-height:1.08;margin:8px 0}h2{font-size:19px;margin:0 0 12px}h3{font-size:15px;margin:0 0 7px}.muted{color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:12px 0}.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}.stat span{color:var(--muted);font-size:12px}.stat b{display:block;font-size:24px;margin-top:3px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.progress{height:9px;background:#2a394e;border-radius:20px;overflow:hidden;margin:10px 0}.progress div{height:100%;background:var(--green);width:0%;transition:width .2s}
+button,select,input,textarea{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px}button{cursor:pointer;font-weight:700}.primary{background:var(--green);color:#14200c;border:0}.blue{background:#25486a;border-color:#386b96}
+select{max-width:100%}textarea{width:100%;min-height:95px;resize:vertical}input[type=checkbox]{width:20px;height:20px;accent-color:#a6e477}
+.tabs{display:flex;gap:7px;overflow:auto;padding:3px 0 8px}.tab{white-space:nowrap}.tab.active{background:var(--green);color:#17220f;border-color:var(--green)}
+.track{border:1px solid var(--line);border-radius:14px;padding:13px;margin:10px 0;background:#101b2a}.trackhead{display:flex;align-items:center;gap:9px;margin-bottom:9px}.trackhead b{font-size:16px}.trackhead small{color:var(--muted);display:block}
+.topic{background:var(--panel2);border-radius:10px;padding:10px;margin:8px 0}.topic strong{display:block;margin-bottom:4px}.topic p{margin:4px 0;color:#d7e0ec;font-size:13px}
+.checkrow{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+ul{padding-left:20px;margin:7px 0}li{margin:5px 0;font-size:13px}
+.badge{font-size:11px;color:var(--gold);border:1px solid #765b36;border-radius:20px;padding:4px 8px}
+.daygrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.daycell{padding:8px 2px;text-align:center;background:var(--panel2);border:1px solid var(--line);border-radius:8px;font-size:11px;color:var(--muted)}.daycell.done{background:#29452e;color:#ddffc6;border-color:#4e7c4c}.daycell.partial{border-color:#567b9b;color:#c8e7ff}.daycell.selected{outline:2px solid var(--green)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1}.hidden{display:none}.timer{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}
+@media(min-width:680px){.grid{grid-template-columns:repeat(4,1fr)}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
+</style></head>
+<body><main>
+<header>
+ <div class="kicker">NOV 01 — DEC 31, 2026 · 61 DAYS</div>
+ <h1>WINTER ARC<br>DEVELOPER EDITION 💻</h1>
+ <p class="muted">2 focused hours every day · Build real skills, not just watch tutorials.</p>
+ <div class="progress"><div id="overallBar"></div></div>
+ <div class="row"><span class="muted" id="overallText">0 / 61 days completed</span><b id="overallPct">0%</b></div>
+</header>
+<div class="grid">
+ <div class="stat"><span>Days completed</span><b id="daysDone">0 / 61</b></div>
+ <div class="stat"><span>Learning streak</span><b id="streak">0 🔥</b></div>
+ <div class="stat"><span>.NET track</span><b id="netDone">0%</b></div>
+ <div class="stat"><span>DSA track</span><b id="dsaDone">0%</b></div>
+</div>
+<section class="card">
+ <div class="row"><h2>Today's learning plan</h2><span class="badge" id="dayLabel">DAY 1</span></div>
+ <label class="muted" for="daySelect">Choose your learning day</label>
+ <select id="daySelect" style="width:100%;margin:6px 0 10px"></select>
+ <div class="row"><div><b id="dateTitle">November 1, 2026</b><div class="muted" id="phaseTitle">Phase 1</div></div><span class="badge">120 MIN / DAY</span></div>
+ <div class="twocol">
+  <div class="track">
+   <div class="trackhead"><span style="font-size:23px">🧩</span><div><b>C# / .NET — 60 min</b><small>Backend engineering pathway</small></div></div>
+   <div class="topic"><strong id="netTopic"></strong><p id="netLearn"></p></div>
+   <h3>Build / practise</h3><ul id="netTasks"></ul>
+   <label class="checkrow"><input type="checkbox" id="netLearned"> I completed the C# / .NET hour</label>
+  </div>
+  <div class="track">
+   <div class="trackhead"><span style="font-size:23px">🧠</span><div><b>DSA with C# — 60 min</b><small>Problem-solving pathway</small></div></div>
+   <div class="topic"><strong id="dsaTopic"></strong><p id="dsaLearn"></p></div>
+   <h3>Problems to solve</h3><ul id="dsaTasks"></ul>
+   <label class="checkrow"><input type="checkbox" id="dsaLearned"> I completed the DSA hour</label>
+  </div>
+ </div>
+ <label class="muted" for="notes">Today's notes · doubts · what you learned</label>
+ <textarea id="notes" placeholder="Write what you understood, errors you fixed, and what to revise..."></textarea>
+ <div class="actions" style="margin-top:10px"><button class="primary" id="saveDay">Save today's progress</button><button id="clearDay">Clear this day</button></div>
+ <p class="muted" id="saveStatus" aria-live="polite"></p>
+</section>
+<section class="card">
+ <h2>Two-hour focus timer</h2>
+ <p class="muted">Use two separate 60-minute blocks. Timer works while this page stays open.</p>
+ <div class="row"><div><div class="timer" id="timer">60:00</div><div class="muted" id="timerLabel">C# / .NET session</div></div><div class="actions"><button class="primary" id="startTimer">Start</button><button id="pauseTimer">Pause</button><button id="resetTimer">Reset</button></div></div>
+ <div class="actions" style="margin-top:10px"><button class="blue" id="netTimer">C# / .NET · 60 min</button><button class="blue" id="dsaTimer">DSA · 60 min</button></div>
+</section>
+<section class="card">
+ <h2>61-day roadmap</h2><p class="muted">Tap any day to open its lessons and coding assignments.</p><div class="daygrid" id="calendar"></div>
+</section>
+<section class="card">
+ <h2>How to use this roadmap well</h2>
+ <ul>
+  <li><b>Type every example yourself.</b> Don't only watch videos or copy code.</li>
+  <li><b>For DSA:</b> attempt each problem independently for 20–30 minutes before checking hints or solutions.</li>
+  <li><b>For .NET:</b> keep one evolving project and add features as your knowledge grows.</li>
+  <li><b>Use Git:</b> commit your code regularly and write useful commit messages.</li>
+  <li><b>Review:</b> use the notes box to record bugs, concepts to revisit and interview explanations.</li>
+ </ul>
+ <div class="topic"><strong>Recommended tools</strong><p>Visual Studio 2022 or VS Code, .NET SDK, SQL Server / LocalDB, Git and GitHub. Use the current supported .NET SDK available in your environment and check compatibility before creating projects.</p></div>
+</section>
+<section class="card">
+ <h2>Backup your learning data</h2><p class="muted">Progress and notes are saved locally and can also be synced to Google Drive below. Export backups as an extra safety copy.</p>
+ <div class="actions"><button class="primary" id="exportBtn">Export progress</button><button id="importBtn">Import progress</button><button id="resetBtn">Reset all data</button></div><input id="importFile" type="file" accept="application/json" hidden>
+</section>
+<section class="card" id="driveSyncCard">
+<h2>Google Drive cloud sync</h2>
+<p class="muted">Connect this app to your Google account. Your backup is saved as a JSON file in your Google Drive. Connect each device with the same account to sync progress.</p>
+<label class="field" for="googleClientId">Google OAuth Client ID</label>
+<input id="googleClientId" type="text" placeholder="Paste your Google Web client ID" autocomplete="off" style="width:100%;text-align:left">
+<div class="actions" style="margin-top:9px"><button class="primary" id="driveConnect">Connect Google Drive</button><button id="driveSync">Sync now</button><button id="driveRestore">Restore from Drive</button></div>
+<p class="muted" id="driveStatus" aria-live="polite">Not connected. Your local browser data is still saved.</p>
+<p class="muted">Privacy: this app requests access only to files it creates or opens. It does not get access to all your Drive files. A Google access token is kept in memory, not saved in the page.</p>
+</section>
+<script>
+(()=>{
+ const APP_ID='developer', STORAGE_KEY='winterDev2026_v1', FILE_NAME='WinterArc_Developer_Backup.json';
+ const META_KEY='winterArcDriveMeta_'+APP_ID, CLIENT_KEY='winterArcDriveClientId';
+ const $=id=>document.getElementById(id); let token='', tokenClient=null, fileId=null, syncing=false, suppress=false, debounce=null;
+ const status=(s)=>{const el=$('driveStatus');if(el)el.textContent=s};
+ const readLocal=()=>{try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')}catch{return null}};
+ const getMeta=()=>{try{return JSON.parse(localStorage.getItem(META_KEY)||'{"updatedAt":0}')}catch{return {updatedAt:0}}};
+ const setMeta=t=>localStorage.setItem(META_KEY,JSON.stringify({updatedAt:t}));
+ function loadGIS(){return new Promise((resolve,reject)=>{if(window.google?.accounts?.oauth2)return resolve();let s=document.querySelector('script[data-google-gis]');if(s){s.addEventListener('load',resolve,{once:true});s.addEventListener('error',reject,{once:true});return} s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.defer=true;s.dataset.googleGis='1';s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
+ async function api(url,opts={}){let r=await fetch(url,{...opts,headers:{Authorization:'Bearer '+token,...(opts.headers||{})}});if(!r.ok){let t=await r.text();if(r.status===401){token='';status('Google session expired. Tap Connect Google Drive again.')}throw new Error('Google Drive error '+r.status+': '+t.slice(0,240))}return r}
+ async function findFile(){let q=encodeURIComponent("name='"+FILE_NAME+"' and trashed=false");let r=await api('https://www.googleapis.com/drive/v3/files?q='+q+'&spaces=drive&fields=files(id,name,modifiedTime)&pageSize=10');let j=await r.json();return j.files?.[0]||null}
+ async function readRemote(f){let r=await api('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(f.id)+'?alt=media');return await r.json()}
+ async function writeRemote(payload,f){let body=JSON.stringify(payload);if(f){await api('https://www.googleapis.com/upload/drive/v3/files/'+encodeURIComponent(f.id)+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body});return f.id}
+ const boundary='winterarc_'+Math.random().toString(36).slice(2);const metadata={name:FILE_NAME,mimeType:'application/json'};
+ const multipart='--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(metadata)+'\r\n--'+boundary+'\r\nContent-Type: application/json\r\n\r\n'+body+'\r\n--'+boundary+'--';
+ let r=await api('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+boundary},body:multipart});return (await r.json()).id;
+ }
+ function envelope(data,updatedAt){return {appId:APP_ID,schemaVersion:1,updatedAt,data};}
+ async function sync(forceRestore=false){if(!token){status('Connect Google Drive first.');return}if(syncing)return;syncing=true;try{status('Checking Google Drive…');let f=await findFile();fileId=f?.id||null;let local=readLocal();let localMeta=getMeta();
+  if(forceRestore){if(!f){status('No cloud backup found yet.');return}let remote=await readRemote(f);if(remote.appId!==APP_ID||!remote.data)throw new Error('The Drive file does not match this app.');suppress=true;localStorage.setItem(STORAGE_KEY,JSON.stringify(remote.data));setMeta(remote.updatedAt||Date.now());suppress=false;location.reload();return}
+  if(!f){if(!local){status('No local or cloud data found yet.');return}let stamp=localMeta.updatedAt||Date.now();setMeta(stamp);fileId=await writeRemote(envelope(local,stamp),null);status('First backup uploaded to Google Drive.');return}
+  let remote=await readRemote(f);if(remote.appId!==APP_ID||!remote.data)throw new Error('The Drive file does not match this app.');let rt=Number(remote.updatedAt)||0,lt=Number(localMeta.updatedAt)||0;
+  if(!local || rt>lt){suppress=true;localStorage.setItem(STORAGE_KEY,JSON.stringify(remote.data));setMeta(rt||Date.now());suppress=false;location.reload();return}
+  if(lt>rt){fileId=await writeRemote(envelope(local,lt),f);status('Your newer local progress was uploaded to Google Drive.');return}
+  status('Already in sync. Your local and Drive data match.');
+ }catch(e){suppress=false;status(e.message||'Sync failed. Check your connection and Google setup.')}finally{syncing=false}}
+ function connect(){let clientId=$('googleClientId').value.trim();if(!clientId){status('Paste your Google Web OAuth Client ID first.');return}localStorage.setItem(CLIENT_KEY,clientId);loadGIS().then(()=>{tokenClient=google.accounts.oauth2.initTokenClient({client_id:clientId,scope:'https://www.googleapis.com/auth/drive.file',callback:async(resp)=>{if(resp.error){status('Google authorization failed: '+resp.error);return}token=resp.access_token;status('Google connected. Syncing…');await sync(false)}});tokenClient.requestAccessToken({prompt:'consent'})}).catch(()=>status('Could not load Google sign-in. Check your internet connection and try again.'))}
+ function schedule(){if(suppress||!token)return;clearTimeout(debounce);debounce=setTimeout(async()=>{try{let local=readLocal();if(!local)return;let stamp=Date.now();setMeta(stamp);let f=await findFile();fileId=await writeRemote(envelope(local,stamp),f);status('Auto-backup saved to Google Drive at '+new Date(stamp).toLocaleTimeString())}catch(e){status('Local save is safe. Cloud auto-backup paused: '+e.message)}},1600)}
+ const originalSet=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){originalSet.call(this,k,v);if(k===STORAGE_KEY)schedule()};
+ $('googleClientId').value=localStorage.getItem(CLIENT_KEY)||'';
+ $('driveConnect').addEventListener('click',connect);$('driveSync').addEventListener('click',()=>sync(false));$('driveRestore').addEventListener('click',()=>{if(confirm('Replace this device’s current app data with the Google Drive backup?'))sync(true)});
+})();
+</script>
+<footer class="muted" style="text-align:center;padding:12px">Winter Arc Developer Edition · Learn → Code → Debug → Explain</footer>
+</main>
+<script>
+const NET=[
+["C# setup, syntax & variables","Install/check the .NET SDK. Learn statements, variables, primitive types, operators, console I/O and string interpolation.",["Create a console app that reads a name and age and prints a formatted profile.","Build a unit converter (km/miles and °C/°F).","Practise if/else, switch and loops with small menu programs."]],
+["Control flow & methods","Understand conditions, loops, method signatures, parameters, return values, scope and method overloading.",["Write a calculator using separate methods for each operation.","Create methods to test even/odd, prime and palindrome numbers.","Refactor yesterday's menu program into small methods."]],
+["Arrays, strings & debugging","Learn arrays, indexing, string methods, StringBuilder, debugging breakpoints and basic Big-O intuition.",["Build a marks analyser: min, max, average and grade.","Count vowels, words and character frequencies in a sentence.","Debug an intentionally broken loop and explain the fix."]],
+["Object-oriented programming I","Learn classes, objects, fields, properties, constructors, access modifiers and encapsulation.",["Model a BankAccount with deposit, withdraw and balance validation.","Create Employee and Department classes.","Explain the difference between a field and a property in your own words."]],
+["Object-oriented programming II","Learn inheritance, polymorphism, abstraction, interfaces and composition; understand when not to use inheritance.",["Create an abstract Shape class with Circle and Rectangle implementations.","Define an IPayable interface and implement it for two classes.","Refactor one inheritance example to use composition and compare."]],
+["Collections & generics","Study List, Dictionary, HashSet, Queue, Stack, arrays vs collections and generic types.",["Build a contact book with Dictionary<string, Contact>.","Remove duplicates from a list using HashSet.","Create a generic Pair<T1,T2> and a simple generic repository."]],
+["Exceptions, files & review","Learn try/catch/finally, custom exceptions, using/disposal, file read/write and basic JSON serialization.",["Create a file-based expense tracker with safe input validation.","Write and read a list of objects as JSON.","Review days 1–6; build a small console app without following a tutorial."]],
+["LINQ fundamentals","Learn IEnumerable, deferred execution, Where, Select, OrderBy, GroupBy, Any, All, FirstOrDefault and aggregates.",["Given a list of employees, filter by salary and department.","Group orders by customer and calculate totals.","Solve 10 small LINQ queries and explain each pipeline."]],
+["Delegates, events & lambdas","Understand delegates, Func, Action, Predicate, lambda expressions, events and event subscribers.",["Create a notification event raised when an order status changes.","Use Func and Action in small reusable methods.","Build a simple publisher/subscriber console demo."]],
+["Async programming","Learn Task, async/await, cancellation tokens, exception handling in async code and why blocking is risky.",["Call two simulated async operations sequentially and concurrently.","Add CancellationToken support to a long-running task.","Explain Task vs Thread at a high level."]],
+["SOLID & clean code","Study Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion, naming and separation of concerns.",["Refactor a large service class into smaller responsibilities.","Introduce an interface and inject its implementation manually.","Write a short explanation of each SOLID principle with a C# example."]],
+["SQL foundations","Learn relational tables, keys, constraints, SELECT, filtering, sorting, joins, grouping and aggregate functions.",["Create tables for Users, Products and Orders.","Write 12 queries using JOIN, GROUP BY and HAVING.","Practise primary key, foreign key and unique constraints."]],
+["ADO.NET & database access","Understand connections, commands, parameters, readers, transactions and why parameterized queries matter.",["Connect a console app to SQL Server / LocalDB.","Implement parameterized insert, update and select.","Use a transaction for a multi-step operation and handle rollback."]],
+["HTTP & web foundations","Learn client/server, request-response, HTTP methods, status codes, headers, JSON, REST principles and routing basics.",["Use an API client to send GET, POST, PUT, PATCH and DELETE requests.","Inspect status codes and request/response headers.","Design REST endpoints for a library system."]],
+["ASP.NET Core foundations","Understand project structure, Program.cs, hosting, middleware pipeline, environment settings and dependency injection.",["Create an ASP.NET Core Web API project.","Add a health endpoint and a custom middleware that logs requests.","Register and inject a small service using DI."]],
+["MVC architecture","Learn MVC responsibilities, controllers, actions, models, views, Razor syntax, routing and model binding.",["Create an MVC app with a Product list and details page.","Add a form to create a product and bind its model.","Explain what belongs in controller vs service vs view."]],
+["MVC validation & state","Study DataAnnotations, server-side validation, client-side validation, TempData, ViewBag, ViewData and model state.",["Add required, range and string-length validation to forms.","Show validation messages in Razor views.","Use TempData for a one-time success message."]],
+["Entity Framework Core I","Learn DbContext, DbSet, entities, connection strings, provider setup, migrations and database-first vs code-first.",["Add EF Core to a small app and configure DbContext.","Create an initial migration and update the database.","Implement create/read operations using EF Core."]],
+["Entity Framework Core II","Study relationships, navigation properties, eager/lazy/explicit loading, tracking vs no-tracking and migrations.",["Model Customer–Orders one-to-many and Product–Tags many-to-many.","Implement update/delete and include related data safely.","Compare AsNoTracking with tracked queries."]],
+["Repository, service & DTO patterns","Learn DTOs, mapping, service layer, repository trade-offs, validation boundaries and avoiding entity leakage.",["Move business logic from controller into a service.","Create request and response DTOs for Product.","Map entities to DTOs manually and test the service."]],
+["REST API CRUD","Build clean API controllers/minimal endpoints; learn route design, DTOs, status codes, CreatedAtAction and pagination basics.",["Build full CRUD endpoints for Products.","Return appropriate 200, 201, 204, 400 and 404 responses.","Add filtering, sorting and page/size pagination."]],
+["Swagger & OpenAPI","Understand OpenAPI documents, Swagger UI, endpoint summaries, response metadata, schema examples and API testing.",["Enable and configure OpenAPI/Swagger for your API.","Add XML comments or endpoint descriptions and response types.","Test every CRUD endpoint from Swagger UI."]],
+["API validation & error handling","Study model validation, problem details, global exception handling, logging and consistent error responses.",["Add DTO validation and return clear 400 errors.","Implement centralized exception handling.","Log failures without exposing secrets or stack traces to clients."]],
+["Authentication & authorization","Learn authentication vs authorization, claims, roles, policies, password hashing concepts, JWT structure and secure configuration.",["Protect an endpoint with an authorization policy in a learning project.","Understand JWT header, payload and signature; never hard-code signing keys.","Add role-based access and test authorized/unauthorized responses."]],
+["CORS, security & API quality","Study CORS, HTTPS, secrets management, rate limiting, input validation, OWASP API risks and safe error messages.",["Configure a restrictive CORS policy for a known frontend origin.","Move secrets to user-secrets/environment variables.","Review your API against common OWASP API security risks."]],
+["Unit testing","Learn xUnit, assertions, test naming, arrange-act-assert, mocking concepts and testing service logic.",["Create unit tests for a service with success and failure cases.","Test validation and edge cases.","Use a mock/fake dependency and understand what should not be mocked."]],
+["Integration testing","Study WebApplicationFactory, test server, test database strategy and end-to-end API verification.",["Write an integration test for a GET endpoint.","Test a POST request and verify persisted output.","Run the complete test suite and fix flaky tests."]],
+["Layered project architecture","Organize API, application, domain and infrastructure responsibilities; understand dependency direction and when Clean Architecture helps.",["Refactor your project into sensible layers.","Keep business rules out of controllers and persistence details out of domain logic.","Draw the dependency diagram and explain it."]],
+["Caching & performance","Learn in-memory caching, distributed cache concepts, async database calls, pagination, indexes and profiling basics.",["Cache a read-heavy lookup with a sensible expiration.","Add pagination to a list endpoint and compare response sizes.","Inspect a slow query and propose an index."]],
+["Azure cloud fundamentals","Learn regions, resource groups, subscriptions, identity basics, shared responsibility, App Service, Azure SQL and Storage.",["Draw an architecture for deploying your API to Azure App Service + Azure SQL.","Create a resource-group and service plan cost estimate (do not deploy paid resources without approval).","Explain App Service vs virtual machines."]],
+["Azure deployment & configuration","Study App Service deployment, environment variables, connection strings, managed identity, Key Vault and deployment slots.",["Prepare deployment settings for a sample API.","Explain how managed identity can access Key Vault without embedding credentials.","Create a deployment checklist and rollback plan."]],
+["CI/CD & GitHub Actions","Learn Git branches, pull requests, build/test pipelines, artifacts, secrets and environment approvals.",["Create a GitHub Actions workflow that restores, builds and tests a .NET solution.","Use a feature branch and pull request workflow.","Document build and deployment stages."]],
+["Capstone planning & design","Plan a real backend: requirements, entities, endpoints, validation, roles, database schema and architecture.",["Choose an Employee/Skill Matrix or Task Management API.","Draw ER diagram and API endpoint list.","Create solution structure, Git repo and backlog of features."]],
+["Capstone implementation I","Implement domain models, EF Core persistence, migrations and CRUD service layer.",["Create entities and relationships.","Implement database context and migrations.","Add service methods and unit tests."]],
+["Capstone implementation II","Implement API controllers, DTOs, validation, Swagger and consistent response/error handling.",["Complete CRUD endpoints.","Add DTO validation and Swagger documentation.","Test normal, invalid and not-found scenarios."]],
+["Capstone security & tests","Add authentication/authorization design, roles/policies, tests, logging and secure configuration.",["Protect selected endpoints and test role access.","Add unit and integration tests.","Remove secrets from source code and review error responses."]],
+["Capstone deployment readiness","Prepare Azure hosting, configuration, CI pipeline, database migration plan, monitoring and README.",["Build CI workflow for restore/build/test.","Prepare Azure deployment configuration and estimate costs.","Write setup, API usage and deployment documentation."]],
+["Final review & mock interview","Consolidate C#/.NET concepts; practise explaining architecture, DI, middleware, EF Core, REST, async and Azure.",["Build a small API feature from a blank project without copying.","Answer 15 .NET interview questions aloud.","Review weak topics and write a next-30-day improvement plan."]]
+];
+const DSA=[
+["Complexity & problem-solving","Learn time/space complexity, Big-O, constraints, brute force vs optimized approach.",["For 5 simple loops, estimate time complexity.","Find maximum and minimum in an array.","Explain O(1), O(log n), O(n), O(n log n), O(n²)."]],
+["Arrays I","Learn traversal, indexing, in-place updates and edge cases.",["Find second largest distinct element.","Reverse an array in-place.","Move all zeroes to the end while preserving order."]],
+["Arrays II","Study prefix sums, running totals and subarray reasoning.",["Build prefix-sum array and answer range-sum queries.","Find equilibrium index.","Maximum subarray sum (Kadane's algorithm)."]],
+["Two pointers","Use left/right pointers for sorted arrays, partitions and in-place operations.",["Two Sum in a sorted array.","Remove duplicates from a sorted array in-place.","Container With Most Water; explain pointer movement."]],
+["Sliding window","Learn fixed and variable windows for contiguous subarrays/substrings.",["Maximum sum subarray of size K.","Longest substring without repeating characters.","Minimum-size subarray sum (positive numbers)."]],
+["Strings I","Study character arrays, immutability, StringBuilder and frequency counting.",["Valid palindrome ignoring punctuation/case.","Reverse words in a sentence.","Find first non-repeating character."]],
+["Strings II & patterns","Practise anagrams, pattern matching and string window problems.",["Valid Anagram.","Group Anagrams.","Longest common prefix."]],
+["Hashing","Learn Dictionary and HashSet patterns, frequency maps and lookup trade-offs.",["Two Sum using Dictionary.","Contains Duplicate.","Intersection of two arrays and frequency count."]],
+["Hashing patterns","Apply maps to prefix sums and grouping.",["Subarray Sum Equals K.","Longest consecutive sequence.","Ransom note / character construction check."]],
+["Sorting I","Understand selection, bubble, insertion and built-in sorting; compare complexities.",["Implement insertion sort.","Sort an array of 0s, 1s and 2s.","Merge two sorted arrays."]],
+["Binary search I","Learn search space, loop invariants, mid calculation and boundary handling.",["Implement iterative binary search.","Find first and last position of a target.","Search insert position."]],
+["Binary search II","Apply binary search on answers and rotated arrays.",["Search in rotated sorted array.","Find minimum in rotated sorted array.","Find integer square root using binary search."]],
+["Linked lists I","Understand nodes, references, head/tail, traversal and insertion/deletion.",["Implement a singly linked list in C#.","Reverse a linked list iteratively.","Find the middle node."]],
+["Linked lists II","Practise fast/slow pointers and cycle detection.",["Detect a cycle using Floyd's algorithm.","Find the start of a cycle.","Merge two sorted linked lists."]],
+["Stacks","Learn LIFO, Stack<T>, push/pop/peek and monotonic stack patterns.",["Validate parentheses.","Implement stack using two queues or queues using stacks.","Daily Temperatures / next greater element."]],
+["Queues & deque","Learn FIFO, Queue<T>, circular queues and deque use cases.",["Implement a queue using an array or linked list.","Generate binary numbers from 1 to N using a queue.","First non-repeating character in a stream."]],
+["Recursion I","Understand call stack, base case, recursive case and tracing.",["Factorial and Fibonacci recursively and iteratively.","Sum digits recursively.","Generate all subsequences of a short string."]],
+["Backtracking","Learn choose-explore-unchoose and pruning.",["Generate all subsets.","Generate permutations of distinct numbers.","Combination Sum for a target."]],
+["Trees I","Learn tree terminology, binary tree nodes, DFS traversals and recursion.",["Implement preorder, inorder and postorder traversal.","Find maximum depth of a binary tree.","Count leaf nodes."]],
+["Trees II & BST","Study level-order traversal, BST property, search, insert and delete concepts.",["Implement level-order traversal using Queue<T>.","Validate a Binary Search Tree.","Find lowest common ancestor in a BST."]],
+["Heaps & priority queues","Learn min/max heap concepts, PriorityQueue<TElement,TPriority> and top-K patterns.",["Find kth largest element.","Top K frequent elements.","Merge K sorted lists or arrays (start with two, then generalize)."]],
+["Graphs I","Learn adjacency lists/matrices, vertices, edges, directed/undirected and visited sets.",["Represent a graph with Dictionary<int,List<int>>.","Implement BFS traversal.","Implement DFS traversal recursively and iteratively."]],
+["Graphs II","Practise connected components, cycle detection and grid traversal.",["Number of Islands.","Detect cycle in an undirected graph.","Clone Graph or count connected components."]],
+["Topological sort","Learn DAGs, indegree, Kahn's algorithm and dependency ordering.",["Course Schedule feasibility.","Return a valid course order.","Explain when topological sort is impossible."]],
+["Greedy algorithms","Learn local choices, proof intuition, intervals and sorting by criteria.",["Assign Cookies.","Activity/interval selection.","Merge overlapping intervals."]],
+["Dynamic programming I","Understand overlapping subproblems, memoization, tabulation and state definition.",["Climbing Stairs.","House Robber.","Min Cost Climbing Stairs."]],
+["Dynamic programming II","Practise 1D DP and comparing recurrence relations.",["Coin Change minimum coins.","Longest Increasing Subsequence (start with O(n²)).","Decode Ways."]],
+["Dynamic programming III","Study 2D grids, subsequence states and table construction.",["Unique Paths.","Minimum Path Sum.","Longest Common Subsequence."]],
+["Bit manipulation","Learn AND, OR, XOR, shifts, masks and signed integer cautions.",["Check whether a number is a power of two.","Find the single number using XOR.","Count set bits."]],
+["Mixed interview set I","Combine arrays, strings, hashing, two pointers and binary search; explain complexity.",["Product of Array Except Self.","3Sum.","Longest Repeating Character Replacement."]],
+["Mixed interview set II","Combine linked lists, stack, trees, heap and graph patterns.",["Add Two Numbers (linked lists).","Binary Tree Right Side View.","Kth Largest Element in an Array."]],
+["Timed mock & revision","Practise interview communication: clarify, brute force, optimize, code, test and analyze.",["One medium array/string problem in 25 minutes.","One tree/graph problem in 25 minutes.","Review mistakes and write patterns to revisit."]]
+];
+const phases=["C# foundations","C# language mastery","Database & web foundations","ASP.NET Core MVC & EF Core","Web API engineering","Security, testing & architecture","Azure, CI/CD & capstone"];
+const phaseFor=i=>i<7?0:i<11?1:i<14?2:i<20?3:i<28?4:i<32?5:6;
+const NET_EXTRA=[
+["Capstone: requirements & user stories","Turn a real-world problem into clear functional and non-functional requirements.",["Write 8 user stories with acceptance criteria.","Define roles, permissions and core workflows.","Create a small prioritized backlog."]],
+["Capstone: data model","Design relational entities, constraints and relationships before coding.",["Draw an ER diagram for your chosen project.","Define keys, nullability and indexes.","Implement or refine EF Core entities."]],
+["Capstone: service logic","Implement business rules in services and keep controllers thin.",["Add one complete business workflow.","Validate edge cases and invalid state transitions.","Write unit tests for business rules."]],
+["Capstone: API contracts","Design stable request/response DTOs and consistent endpoint conventions.",["Document endpoint method, route, request and response.","Add pagination and filtering to one collection endpoint.","Test contract behavior in Swagger."]],
+["Capstone: authentication","Implement secure identity flow appropriate to the project.",["Add registration/login only in a learning environment with safe password handling.","Protect endpoints with policies or roles.","Test access boundaries and unauthorized responses."]],
+["Capstone: file handling","Learn safe upload/download patterns, validation, size limits and storage abstraction.",["Add a file metadata model or safe upload endpoint.","Validate file size and allowed content types.","Keep storage credentials outside source control."]],
+["Capstone: search & filtering","Build useful query parameters and efficient data access.",["Add search, filter, sort and pagination parameters.","Avoid loading an entire table into memory.","Test empty, invalid and large query cases."]],
+["Capstone: observability","Learn structured logs, health checks, metrics concepts and correlation IDs.",["Add health checks for app and database readiness.","Use structured logging for a workflow.","Avoid logging secrets or personal data."]],
+["Capstone: performance pass","Profile a real endpoint and improve query shape, indexes or caching.",["Measure response before and after one improvement.","Inspect generated SQL for a key query.","Document the trade-off and result."]],
+["Capstone: integration testing","Verify full request-to-database behavior in a test environment.",["Test create/read/update/delete flows.","Test validation and authorization failures.","Ensure tests clean up their data."]],
+["Capstone: API documentation","Make the API understandable to another developer.",["Add descriptions and examples to important endpoints.","Write local setup and configuration instructions.","Create a sample request collection."]],
+["Capstone: deployment rehearsal","Prepare environment-specific configuration and safe release steps.",["Create a deployment checklist.","Run build and tests in CI.","Document database migration and rollback steps."]],
+["Capstone: code review","Review maintainability, naming, duplication, security and error handling.",["Review your own pull request as a teammate.","Fix at least five maintainability issues.","Record unresolved technical debt."]],
+["Capstone: final demo","Demonstrate the project and explain architecture choices.",["Give a 5-minute demo without reading notes.","Explain DI, middleware, EF Core and API security choices.","Write a retrospective and next learning goals."]],
+["C# interview revision","Consolidate language fundamentals and object-oriented design.",["Answer questions on value/reference types, boxing and nullable types.","Code a small class design from scratch.","Explain interface vs abstract class with use cases."]],
+[".NET interview revision","Consolidate CLR, garbage collection, DI lifetimes, middleware and configuration.",["Explain request pipeline in order.","Compare transient, scoped and singleton lifetimes.","Explain async/await and common deadlock pitfalls."]],
+["MVC and EF Core revision","Review MVC lifecycle, model binding, validation, tracking and migrations.",["Trace a form submission end-to-end.","Explain eager vs lazy loading.","Fix a deliberately inefficient EF Core query."]],
+["Web API interview revision","Review REST, HTTP status codes, DTOs, Swagger, auth and error handling.",["Design endpoints for a booking system.","Explain 401 vs 403 and 200 vs 201 vs 204.","Improve a poorly designed API response."]],
+["Azure and DevOps revision","Review App Service, Azure SQL, Storage, Key Vault, managed identity and CI/CD.",["Draw a secure cloud deployment architecture.","Explain app settings vs Key Vault secrets.","Describe a build-test-deploy pipeline."]],
+["Build from blank project","Practise independent implementation with no step-by-step tutorial.",["Create a new Web API with one entity and CRUD endpoints.","Add EF Core, validation and Swagger.","Commit a working baseline to Git."]],
+["Build a feature end-to-end","Combine database, service, API, validation and tests.",["Choose one feature and implement it end-to-end.","Add unit and integration tests.","Explain each layer's responsibility."]],
+["Debugging and troubleshooting","Practise reading stack traces, logs, breakpoints and isolating root causes.",["Debug a null reference and an EF Core query issue.","Trace a failed HTTP request from controller to database.","Write root cause and prevention notes."]],
+["Architecture trade-offs","Compare monolith vs microservices, layered vs Clean Architecture and sync vs async boundaries.",["Draw a modular monolith architecture.","Explain when microservices are unnecessary.","Identify one abstraction that adds no value and simplify it."]],
+["Portfolio polish","Make the project easy to run, inspect and evaluate.",["Write a strong README with screenshots or API examples.","Add setup instructions and sample configuration.","Ensure secrets and generated files are excluded from Git."]]
+];
+const DSA_EXTRA=[
+["Array & string challenge set","Solve mixed patterns under time pressure and explain complexity.",["Rotate Array.","Best Time to Buy and Sell Stock.","Find All Anagrams in a String."]],
+["Hash map challenge set","Practise frequency maps, grouping and prefix-sum lookups.",["Isomorphic Strings.","Longest Subarray with Sum K.","4Sum (try brute force then optimize)."]],
+["Binary search challenge set","Practise boundary search and search-on-answer.",["Find Peak Element.","Koko Eating Bananas.","Median of Two Sorted Arrays (stretch problem)."]],
+["Linked list challenge set","Combine pointer manipulation and careful edge-case handling.",["Remove Nth Node From End.","Palindrome Linked List.","Intersection of Two Linked Lists."]],
+["Stack and queue challenge set","Apply monotonic stack and queue patterns.",["Largest Rectangle in Histogram.","Sliding Window Maximum.","Evaluate Reverse Polish Notation."]],
+["Recursion & backtracking challenge set","Practise recursion trees, pruning and duplicate handling.",["Word Search.","Combination Sum II.","N-Queens (stretch problem)."]],
+["Tree challenge set","Combine traversal, recursion and tree properties.",["Diameter of Binary Tree.","Path Sum.","Serialize and Deserialize Binary Tree (stretch)."]],
+["BST & heap challenge set","Practise ordered structures and top-K queries.",["Kth Smallest Element in a BST.","Find Median from Data Stream.","Merge K Sorted Lists."]],
+["Graph challenge set","Practise BFS/DFS, shortest paths and visited-state design.",["Rotting Oranges.","01 Matrix (multi-source BFS).","Network Delay Time (Dijkstra)."]],
+["Graph advanced patterns","Study disjoint sets and minimum spanning tree concepts.",["Implement Disjoint Set Union.","Number of Provinces using DSU.","Redundant Connection."]],
+["Greedy & intervals challenge set","Sort by start/end and justify greedy choices.",["Non-overlapping Intervals.","Meeting Rooms II.","Jump Game."]],
+["Dynamic programming challenge set","Define state and transition before coding.",["Partition Equal Subset Sum.","Target Sum.","Edit Distance (stretch)."]],
+["DP review: subsequences","Compare recursion, memoization and tabulation.",["Longest Palindromic Subsequence.","Distinct Subsequences (stretch).","Coin Change II."]],
+["Bitwise & math review","Use bit operations and arithmetic carefully.",["Missing Number using XOR or sum.","Reverse Bits.","Count Primes using Sieve of Eratosthenes."]],
+["Mixed mock interview A","Use a full interview workflow: clarify, brute force, optimize, code and test.",["Solve one medium sliding-window problem in 25 minutes.","Solve one medium tree problem in 25 minutes.","Explain time and space complexity aloud."]],
+["Mixed mock interview B","Practise data structures under a timer.",["Solve one medium graph problem in 30 minutes.","Solve one stack or heap problem in 20 minutes.","Review edge cases and code quality."]],
+["Pattern revision: arrays & hashing","Identify the pattern before selecting a data structure.",["Repeat Two Sum without notes.","Solve Subarray Sum Equals K.","Solve Longest Consecutive Sequence."]],
+["Pattern revision: pointers & windows","Recognize sorted two-pointer vs contiguous sliding-window use cases.",["Repeat 3Sum.","Solve Minimum Window Substring (stretch).","Explain window invariants."]],
+["Pattern revision: trees & graphs","Choose traversal and visited-state design correctly.",["Repeat Level Order Traversal.","Solve Number of Islands.","Explain BFS vs DFS trade-offs."]],
+["Pattern revision: DP & greedy","Write state, base cases and transition clearly.",["Repeat House Robber.","Solve Jump Game II.","Explain greedy proof intuition for one problem."]],
+["C# DSA implementation","Use C# collections and write readable, testable solutions.",["Implement a generic binary search method.","Implement a min-heap or use PriorityQueue appropriately.","Write tests for empty and boundary inputs."]],
+["Complexity deep dive","Analyse nested loops, recursion and data structure operations.",["Analyse 10 code snippets for Big-O.","Compare Dictionary lookup with List search.","Explain amortized complexity using List<T> growth."]],
+["Problem-solving communication","Practise explaining assumptions, examples and edge cases before code.",["Take one unseen medium problem and talk through the approach.","Write brute force first, then optimize.","Test with empty, single-item and duplicate inputs."]],
+["Final DSA mock","Simulate an interview and review your mistakes.",["One medium array/string problem in 25 minutes.","One medium graph/tree problem in 25 minutes.","Write a mistake log and top five patterns to revisit."]],
+["Personal weak-area day","Choose your weakest topic from the tracker and repair gaps.",["Re-solve two previously failed problems without looking at solutions.","Explain one pattern in plain English.","Add one clean C# solution to your GitHub practice repository."]],
+["Final review & next steps","Consolidate your strongest patterns and build a sustainable next-month plan.",["Pick 5 problems to re-solve after one week.","Create a topic-wise DSA revision checklist.","Write a 30-day continuation plan with realistic daily practice."]],
+["C# coding assessment simulation","Practise clean C# under time constraints.",["Solve a string problem in 20 minutes.","Solve an array/hash map problem in 20 minutes.","Add tests and discuss complexity in 20 minutes."]],
+["Data structure selection","Choose the right structure based on operations and constraints.",["For 8 scenarios, choose List, Dictionary, HashSet, Stack, Queue or Heap.","Implement one scenario and compare alternatives.","Explain time complexity of each key operation."]],
+["Algorithm design review","Compare brute force, sorting, hashing, recursion and DP.",["Take one problem and present two approaches.","Estimate complexity before coding.","Write when each approach is appropriate."]],
+["Interview retrospective","Review solutions and identify recurring mistakes.",["Revisit your 3 hardest problems.","Refactor one solution for readability.","Write your personal interview checklist."]]
+];
+const allDays=Array.from({length:61},(_,i)=>({net:i<NET.length?NET[i]:NET_EXTRA[i-NET.length],dsa:i<DSA.length?DSA[i]:DSA_EXTRA[i-DSA.length]}));
+let state=JSON.parse(localStorage.getItem("winterDev2026_v1")||'{"days":{}}');
+let selected=0,timerSeconds=3600,timerInterval=null,timerTrack="C# / .NET session";
+const $=id=>document.getElementById(id);
+function dateAt(i){return new Date(2026,10,1+i)}function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function dayState(i){return state.days[i]||{net:false,dsa:false,notes:""}}
+function saveState(){localStorage.setItem("winterDev2026_v1",JSON.stringify(state));renderStats();renderCalendar()}
+function selectDay(i){selected=Math.max(0,Math.min(60,i));let d=dateAt(selected);$("daySelect").value=String(selected);$("dayLabel").textContent="DAY "+(selected+1);$("dateTitle").textContent=d.toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"});$("phaseTitle").textContent="Phase "+(phaseFor(selected)+1)+" · "+phases[phaseFor(selected)];
+let x=allDays[selected],s=dayState(selected);$("netTopic").textContent=x.net[0];$("netLearn").textContent=x.net[1];$("netTasks").innerHTML=x.net[2].map(t=>"<li>"+t+"</li>").join("");$("dsaTopic").textContent=x.dsa[0];$("dsaLearn").textContent=x.dsa[1];$("dsaTasks").innerHTML=x.dsa[2].map(t=>"<li>"+t+"</li>").join("");$("netLearned").checked=!!s.net;$("dsaLearned").checked=!!s.dsa;$("notes").value=s.notes||"";$("saveStatus").textContent="";renderCalendar()}
+function saveDay(){let s=dayState(selected);s.net=$("netLearned").checked;s.dsa=$("dsaLearned").checked;s.notes=$("notes").value;state.days[selected]=s;saveState();$("saveStatus").textContent="Progress saved for Day "+(selected+1)+"."}
+function renderStats(){let net=0,dsa=0,complete=0,streak=0,run=0;for(let i=0;i<61;i++){let s=dayState(i);if(s.net)net++;if(s.dsa)dsa++;if(s.net&&s.dsa)complete++}let now=new Date(),today=Math.floor((new Date(iso(now)+"T12:00:00")-new Date("2026-11-01T12:00:00"))/86400000),upto=Math.min(60,today);for(let i=0;i<=upto;i++){let s=dayState(i);if(s.net&&s.dsa)run++;else run=0}streak=run;$("daysDone").textContent=complete+" / 61";$("streak").textContent=streak+" 🔥";$("netDone").textContent=Math.round(net/61*100)+"%";$("dsaDone").textContent=Math.round(dsa/61*100)+"%";$("overallBar").style.width=complete/61*100+"%";$("overallPct").textContent=Math.round(complete/61*100)+"%";$("overallText").textContent=complete+" / 61 days with both tracks complete"}
+function renderCalendar(){$("calendar").innerHTML="";for(let i=0;i<61;i++){let s=dayState(i),b=document.createElement("button");b.className="daycell"+(s.net&&s.dsa?" done":(s.net||s.dsa?" partial":""))+(i===selected?" selected":"");b.innerHTML=(i+1)+"<br>"+dateAt(i).getDate();b.title="Day "+(i+1)+": "+(s.net?" .NET done":" .NET pending")+" · "+(s.dsa?" DSA done":" DSA pending");b.onclick=()=>selectDay(i);$("calendar").append(b)}}
+function showTimer(){let m=Math.floor(timerSeconds/60),s=timerSeconds%60;$("timer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");$("timerLabel").textContent=timerTrack}
+function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}}
+function startTimer(){if(timerInterval)return;timerInterval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;showTimer()}else{stopTimer();$("timerLabel").textContent="Session complete — take a short break!"}},1000)}
+function setTimer(track){stopTimer();timerTrack=track;timerSeconds=3600;showTimer()}
+function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="winter-arc-developer-progress.json";a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let v=JSON.parse(r.result);if(!v.days)throw Error();state=v;localStorage.setItem("winterDev2026_v1",JSON.stringify(state));selectDay(selected);renderStats();alert("Progress imported.")}catch{alert("Invalid backup file.")}};r.readAsText(f)}
+function init(){for(let i=0;i<61;i++){let d=dateAt(i),o=document.createElement("option");o.value=i;o.textContent="Day "+(i+1)+" · "+d.toLocaleDateString("en-IN",{day:"numeric",month:"short"});$("daySelect").append(o)}$("daySelect").onchange=e=>selectDay(Number(e.target.value));$("saveDay").onclick=saveDay;$("clearDay").onclick=()=>{if(confirm("Clear progress and notes for this day?")){delete state.days[selected];saveState();selectDay(selected)}};$("startTimer").onclick=startTimer;$("pauseTimer").onclick=stopTimer;$("resetTimer").onclick=()=>{stopTimer();timerSeconds=3600;showTimer()};$("netTimer").onclick=()=>setTimer("C# / .NET session");$("dsaTimer").onclick=()=>setTimer("DSA session");$("exportBtn").onclick=exportData;$("importBtn").onclick=()=>$("importFile").click();$("importFile").onchange=importData;$("resetBtn").onclick=()=>{if(confirm("Delete all 61 days of learning progress and notes?")){state={days:{}};localStorage.setItem("winterDev2026_v1",JSON.stringify(state));selectDay(0);renderStats()}};selectDay(0);renderStats();showTimer()}
+init();
+</script></body></html>
